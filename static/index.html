@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        body div p h1 h3 h2 img ul li {
+
+            flex: content;
+            font-size: 12px;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        ul {
+            padding: 0px;
+        }
+
+        .left {
+            display: flex;
+            width: 60%;
+            height: 98%;
+        }
+        .right{
+            flex-direction: row-reverse;
+            align-self: right;
+            align-content: right;
+          text-align: right;
+            margin-right: 10px;
+            float: right;
+        }
+
+        .list .left .header {
+            width: 120px;
+            height: 120px;
+        }
+
+        .list .left .header img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .list .left .user_info {
+            width: 99%;
+        }
+
+        .user_info .top {
+            height: 45px;
+            line-height: 25px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .user_info .top h1 {
+            font-size: 14px;
+
+        }
+        .user_info .top h2 {
+            margin-left: 10px;
+            font-size: 10px;
+        }
+
+        .user_info .top img {
+            display: block;
+            margin-top: 10px;
+            justify-content: center;
+            margin-left: 10px;
+            width: 80px;
+            height: 20px;
+        }
+
+        .footer {
+            width: 100%;
+            position: fixed;
+            left: 0px;
+            bottom: 1px;
+            display: flex;
+            height: 70px;
+            flex-direction: row;
+        }
+
+        .footer input {
+            width: 80%;
+            height: 60px;
+        }
+        .footer button {
+            text-align: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0 auto;
+            width: 15%;
+            height: 65px;
+        }
+    </style>
+</head>
+<body>
+<div class="list">
+    <ul id="msg_list">
+        <li class="left">
+            <div class="header"><img src="https://images.budiaodanle.com//Content/images/defaultheadimg.jpg"/></div>
+            <div class="user_info">
+                <div class="top"><h1>name</h1><img
+                        src="https://chatya9av8qa8cfca.ddkaixin.com/Content/chat/icon_1.png"/>
+                    <h2>14:36:23</h2></div>
+                <div class="msg">111</div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="footer">
+    <input type="text" id="msg"/>
+    <button type="button" id="submit">确宝</button>
+</div>
+<script>
+    $(function(){
+        var name=parseInt(Math.random()*1000).toString()
+        var token=parseInt(Math.random()*1000).toString();
+        var ws = new WebSocket("ws://192.168.10.7:5600/ws?token=" +token)
+        ws.onclose = function () {
+            console.info("close websocket")
+        }
+        ws.onmessage = function (data) {
+            var msg=JSON.parse(data.data)
+            console.info(msg)
+
+            var cl="left"
+            if(msg.name==name){
+                cl="left right"
+            }
+
+           $("#msg_list").append(` <li class="${cl}">
+            <div class="header"><img src="https://images.budiaodanle.com//Content/images/defaultheadimg.jpg"/></div>
+            <div class="user_info">
+                <div class="top"><h1>${msg.name}</h1><img
+                        src="https://chatya9av8qa8cfca.ddkaixin.com/Content/chat/icon_1.png"/>
+                    <h2>${msg.time}</h2></div>
+                <div class="msg">${msg.message}</div>
+            </div>
+        </li>`)
+        }
+        $("#submit").click(function () {
+            var msg=$("#msg").val();
+            var data={
+                type:1,
+                message:msg,
+                target_token:"",
+                token:token,
+                name:name
+            }
+            ws.send(JSON.stringify(data))
+        })
+    })
+</script>
+</body>
+</html>
