@@ -11,11 +11,13 @@ import (
 	"strconv"
 	"time"
 	"net"
+	"flag"
+	"strings"
 )
 
 var session syncmap.Map
 var udp *net.UDPConn
-
+var ip *string
 var upgrader = &websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
@@ -51,14 +53,16 @@ type MessageResponse struct {
 }
 
 func createUdp(){
-
-
-
+	arr:=strings.Split(*ip,".")
+	ip1, _ := strconv.Atoi(arr[0])
+	ip2, _ := strconv.Atoi(arr[1])
+	ip3, _ := strconv.Atoi(arr[2])
+	ip4, _ := strconv.Atoi(arr[3])
 
 
 
 	addr := net.UDPAddr{
-		IP:net.IPv4(192,168,10,7),
+		IP:net.IPv4(byte(ip1),byte(ip2),byte(ip3),byte(ip4)),
 		Port:2100,
 	}
 	//广播地址
@@ -206,6 +210,9 @@ func writeMessage(node *Node,msg []byte) {
 }
 
 func main() {
+	ip=flag.String("ip","192.168.10.7","ip address")
+	flag.Parse()
+	fmt.Print("ip",*ip)
 	go createUdp()
 	go udpReceive()
 	print(strconv.Itoa(rand.Int()))
