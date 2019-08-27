@@ -210,7 +210,7 @@ func writeMessage(node *Node,msg []byte) {
 }
 
 func main() {
-	ip=flag.String("ip","192.168.10.7","ip address")
+	ip=flag.String("ip","192.168.10.3","ip address")
 	flag.Parse()
 	fmt.Print("ip",*ip)
 	go createUdp()
@@ -239,6 +239,6 @@ func main() {
 		writer.Write([]byte("链接成功"))
 
 	})
-	log.Println("服务开启：http://192.168.10.7:5600")
+	log.Println("服务开启：http://"+*ip+":5600")
 	log.Fatal(http.ListenAndServe(":5600", nil))
 }

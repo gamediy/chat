@@ -120,7 +120,7 @@
     $(function(){
         var name=parseInt(Math.random()*1000).toString()
         var token=parseInt(Math.random()*1000).toString();
-        var ws = new WebSocket("ws://192.168.10.7:5600/ws?token=" +token)
+        var ws = new WebSocket("ws://192.168.10.3:5600/ws?token=" +token)
         ws.onclose = function () {
             console.info("close websocket")
         }
